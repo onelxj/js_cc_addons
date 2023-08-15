@@ -1,18 +1,21 @@
 load("@aspect_rules_js//js:defs.bzl", "js_binary")
 
-# load("@node-gyp", "")
 cc_binary(
     name = "addon",
     srcs = [
         "addon.cc",
+        # "@nodejs//:nodejs_headers",
     ],
     copts = [
-        "-Inode/",
+        # "-I@nodejs//:nodejs_head",
         "-std=c++17",
+    ],
+    includes = [
+        # "@nodejs//:nodejs_headers",
     ],
     linkshared = 1,
     deps = [
-        "//node:nodejs_lib",
+        "@nodejs//:nodejs_lib",
         "@pybind11//:pybind11_embed",
     ],
 )
