@@ -1,0 +1,68 @@
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+git_repository(
+    name = "pybind11_bazel",
+    branch = "master",
+    remote = "https://github.com/pybind/pybind11_bazel.git",
+    # shallow_since = "1570114335 -0400",
+)
+
+# We still require the pybind library.
+http_archive(
+    name = "pybind11",
+    build_file = "@pybind11_bazel//:pybind11.BUILD",
+    strip_prefix = "pybind11-2.11",
+    urls = ["https://github.com/pybind/pybind11/archive/v2.11.tar.gz"],
+)
+
+load("@pybind11_bazel//:python_configure.bzl", "python_configure")
+
+python_configure(
+    name = "local_config_python",
+    python_version = "3",
+)
+
+####################################################################################
+
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+http_archive(
+    name = "aspect_rules_js",
+    sha256 = "7b2a4d1d264e105eae49a27e2e78065b23e2e45724df2251eacdd317e95bfdfd",
+    strip_prefix = "rules_js-1.31.0",
+    url = "https://github.com/aspect-build/rules_js/releases/download/v1.31.0/rules_js-v1.31.0.tar.gz",
+)
+
+load("@aspect_rules_js//js:repositories.bzl", "rules_js_dependencies")
+
+rules_js_dependencies()
+
+load("@rules_nodejs//nodejs:repositories.bzl", "nodejs_register_toolchains")
+
+nodejs_register_toolchains(
+    name = "nodejs",
+    node_version = "18.13.0",
+)
+
+# http_archive(
+#     # Download one more node sources that we can wrap up.
+# )
+
+# For convenience, npm_translate_lock does this call automatically.
+# Uncomment if you don't call npm_translate_lock at all.
+load("@bazel_features//:deps.bzl", "bazel_features_deps")
+
+bazel_features_deps()
+
+# load("@aspect_rules_js//npm:repositories.bzl", "npm_translate_lock")
+
+# npm_translate_lock(
+#     name = "npm",
+#     pnpm_lock = "//:pnpm-lock.yaml",
+#     verify_node_modules_ignored = "//:.bazelignore",
+# )
+
+# load("@npm//:repositories.bzl", "npm_repositories")
+
+# npm_repositories()

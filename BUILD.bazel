@@ -1,0 +1,34 @@
+load("@aspect_rules_js//js:defs.bzl", "js_binary")
+
+# load("@node-gyp", "")
+cc_binary(
+    name = "addon",
+    srcs = [
+        "addon.cc",
+    ],
+    copts = [
+        "-Inode/",
+        "-std=c++17",
+    ],
+    linkshared = 1,
+    deps = [
+        "//node:nodejs_lib",
+        "@pybind11//:pybind11_embed",
+    ],
+)
+
+genrule(
+    name = "addon_node",
+    srcs = [":addon"],
+    outs = ["addon.node"],
+    cmd = "cp $(location :addon) $@",
+)
+
+js_binary(
+    name = "test",
+    data = [
+        ":addon_node",  # Reference the native addon target
+    ],
+    entry_point = "testjs.js",
+    # Include any necessary dependencies, flags, etc.
+)

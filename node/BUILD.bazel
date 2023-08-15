@@ -1,0 +1,16 @@
+filegroup(
+    name = "nodejs_srcs",
+    srcs = glob(["**"]),
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
+    name = "nodejs_lib",
+    srcs = [":nodejs_srcs"],
+    hdrs = [":nodejs_srcs"],
+    copts = [
+        "-std=c++17",
+        "-Inode/",
+    ],
+    visibility = ["//visibility:public"],
+)
