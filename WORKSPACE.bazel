@@ -38,6 +38,11 @@ load("@aspect_rules_js//js:repositories.bzl", "rules_js_dependencies")
 
 rules_js_dependencies()
 
+local_repository(
+    name = "rules_nodejs_bazelified",
+    path = "submodules/rules_nodejs",
+)
+
 load("@rules_nodejs//nodejs:repositories.bzl", "nodejs_register_toolchains")
 
 nodejs_register_toolchains(
