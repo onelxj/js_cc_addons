@@ -1,0 +1,35 @@
+diff --git a/nodejs/private/nodejs_repo_host_os_alias.bzl b/nodejs/private/nodejs_repo_host_os_alias.bzl
+index 81064f7c..826c85fa 100644
+--- a/nodejs/private/nodejs_repo_host_os_alias.bzl
++++ b/nodejs/private/nodejs_repo_host_os_alias.bzl
+@@ -21,6 +21,8 @@ alias(name = "npm",                     actual = "@{node_repository}_{os_name}//
+ alias(name = "npx",                     actual = "@{node_repository}_{os_name}//:npx")
+ alias(name = "node_files",              actual = "@{node_repository}_{os_name}//:node_files")
+ alias(name = "npm_files",               actual = "@{node_repository}_{os_name}//:npm_files")
++alias(name = "nodejs_lib",              actual = "@{node_repository}_{os_name}//:nodejs_library")
++alias(name = "nodejs_headers",          actual = "@{node_repository}_{os_name}//:nodejs_sources")
+ exports_files([
+     "index.bzl",
+     "bin/node{ext}",
+diff --git a/nodejs/repositories.bzl b/nodejs/repositories.bzl
+index 08ded10f..741faef2 100644
+--- a/nodejs/repositories.bzl
++++ b/nodejs/repositories.bzl
+@@ -354,6 +354,17 @@ cc_library(
+   ),
+   includes = ["bin/nodejs/include/node"],
+ )
++filegroup(
++    name = "nodejs_sources",
++    srcs = glob(["bin/nodejs/include/**"]),
++)
++
++cc_library(
++    name = "nodejs_library",
++    hdrs = [":nodejs_sources"],
++    includes = ["bin/nodejs/include", "bin/nodejs/include/node"],
++    copts = ["-std=c++17"],
++)
+ """.format(
+         node_bin_export = "\n  \"%s\"," % node_bin,
+         npm_bin_export = "\n  \"%s\"," % npm_bin,

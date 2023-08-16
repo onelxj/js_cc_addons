@@ -1,3 +1,0 @@
-[submodule "submodules/rules_nodejs"]
-	path = submodules/rules_nodejs
-	url = https://github.com/bazelbuild/rules_nodejs.git

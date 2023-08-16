@@ -38,21 +38,26 @@ load("@aspect_rules_js//js:repositories.bzl", "rules_js_dependencies")
 
 rules_js_dependencies()
 
-local_repository(
-    name = "rules_nodejs_bazelified",
-    path = "submodules/rules_nodejs",
+# local_repository(
+#     name = "rules_nodejs_bazelified",
+#     path = "submodules/rules_nodejs",
+# )
+
+http_archive(
+    name = "rules_nodejs_patched",
+    patch_args = ["-p1"],
+    patches = ["//:rules_nodejs.patch"],
+    sha256 = "5ad078287b5f3069735652e1fc933cb2e2189b15d2c9fc826c889dc466c32a07",
+    strip_prefix = "rules_nodejs-6.0.1",
+    url = "https://github.com/bazelbuild/rules_nodejs/releases/download/v6.0.1/rules_nodejs-v6.0.1.tar.gz",
 )
 
-load("@rules_nodejs_bazelified//nodejs:repositories.bzl", "nodejs_register_toolchains")
+load("@rules_nodejs_patched//nodejs:repositories.bzl", "nodejs_register_toolchains")
 
 nodejs_register_toolchains(
     name = "nodejs",
     node_version = "18.13.0",
 )
-
-# http_archive(
-#     # Download one more node sources that we can wrap up.
-# )
 
 # For convenience, npm_translate_lock does this call automatically.
 # Uncomment if you don't call npm_translate_lock at all.
