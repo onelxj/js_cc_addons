@@ -1,6 +1,3 @@
-console.log("HELLLLLLOOOO JS")
-
-const addon = require('./addon')
-console.log("FROM JS:" + addon.xx())
-
-console.log("EXIT")
+function greet(name) {
+    return "Hello, " + name + "!";
+}

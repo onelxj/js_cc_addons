@@ -1,6 +1,8 @@
 #include <iostream>
+#include <libplatform/libplatform.h>
 #include <node/node.h>
 #include <pybind11/embed.h>
+#include <v8.h>
 
 namespace demo {
 namespace py = pybind11;
