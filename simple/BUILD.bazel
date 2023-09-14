@@ -1,0 +1,43 @@
+load("@aspect_rules_js//js:defs.bzl", "js_binary")
+load("@rules_python//python:defs.bzl", "py_library")
+load("@pybind11_bazel//:build_defs.bzl", "pybind_extension", "pybind_library")
+
+pybind_extension(
+    name = "cc",
+    srcs = [
+        "cc.cc",
+    ],
+    deps = [
+        "@jsoncpp",
+        # "@pybind11_protobuf//pybind11_protobuf:native_proto_caster",
+    ],
+)
+
+pybind_library(
+    name = "lib",
+    srcs = ["cc.cc"],
+)
+
+cc_binary(
+    name = "test",
+    srcs = ["cc.cc"],
+    data = ["python.py"],
+    # deps = [":cc.so"],
+    deps = [
+        # ":cc.so",
+        # ":lib",
+        "@pybind11",
+        "@pybind11//:pybind11_embed",
+    ],
+)
+
+py_binary(
+    name = "py",
+    srcs = [
+        "py.py",
+    ],
+    data = [
+        ":cc.so",
+    ],
+    main = "py.py",
+)

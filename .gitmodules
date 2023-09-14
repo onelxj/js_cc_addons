@@ -1,0 +1,6 @@
+[submodule "submodules/nodejs"]
+	path = submodules/nodejs
+	url = https://github.com/bazelbuild/rules_nodejs.git
+[submodule "submodules/jsoncpp"]
+	path = submodules/jsoncpp
+	url = https://github.com/open-source-parsers/jsoncpp.git

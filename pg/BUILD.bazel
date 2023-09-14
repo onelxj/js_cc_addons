@@ -1,0 +1,42 @@
+load("@aspect_rules_js//js:defs.bzl", "js_binary")
+load("@rules_proto//proto:defs.bzl", "proto_library")
+load("@rules_cc//cc:defs.bzl", "cc_library", "cc_proto_library", "cc_test")
+
+proto_library(
+    name = "greeter",
+    srcs = ["greeter.proto"],
+)
+
+cc_proto_library(
+    name = "ccproto",
+    deps = [":greeter"],
+)
+
+cc_binary(
+    name = "adaptor",
+    srcs = ["test.cc"],
+    copts = ["-std=c++17"],
+    linkshared = True,
+    deps = [
+        ":ccproto",
+        "@jsoncpp",
+        "@nodejs//:node_cc_lib",
+    ],
+)
+
+genrule(
+    name = "adaptor_node",
+    srcs = [":adaptor"],
+    outs = ["adaptor.node"],
+    cmd = "cp $(location :adaptor) $@",
+)
+
+js_binary(
+    name = "test",
+    data = [
+        ":adaptor_node",  # Reference the native addon target
+        # ":pylib",
+    ],
+    entry_point = "test.js",
+    # env = {"LD_PRELOAD": "/usr/lib/x86_64-linux-gnu/libpython3.10.so"},
+)
